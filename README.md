@@ -110,8 +110,7 @@ option_settings:
   aws:elasticbeanstalk:container:python:
     WSGIPath: fygo.wsgi:application
 ```
-
-###Deploy your site with the EB CLI
+### Deploy your site with the EB CLI
 * By now You should've added everything you need to deploy your application on Elastic Beanstalk.
 * Initialize your EB CLI repository with the eb init command.
 ```commandline
