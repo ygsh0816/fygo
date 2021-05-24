@@ -36,7 +36,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 # API Documentation
-Name: Create Transaction  
+ 1. Name: Create Transaction  
 API Method - POST  
 URL:http://localhost:8000/create-transaction/  
 Body Type: (json)  
@@ -47,16 +47,16 @@ data = {
   "transaction_id": 101010091  
 }  
 
-Name: Get All Users   
+2. Name: Get All Users   
 URL: http://localhost:8000/get-all-users/  
 
-Name: Get Transactions  
+3. Name: Get Transactions  
 URL: http://localhost:8000/get-transactions/  
 
-Name: Get User Operations  
+4. Name: Get User Operations  
 URL: http://localhost:8000/get-operations/1/  
 
-NAME: Create a Withdrawal  
+5. NAME: Create a Withdrawal  
 API Method :POST  
 http://localhost:8000/withdraw/1/  
 Body Type: (json)  
@@ -64,11 +64,11 @@ data = {
   "transaction_amount": 0  
 }  
 
-NAME: Get Available balance  
+6. NAME: Get Available balance  
 URL: http://localhost:8000/get-my-balance/1/  
 
 
-NAME: Register User  
+7. NAME: Register User  
 API Method :POST    
 URL: http://localhost:8000/register/  
 Body Type: (json)  
