@@ -11,6 +11,9 @@
 * I have used SQLite DB for now but PostgresSQL can be used since SQLite can't handle more concurrent requests.
 * I have added a few extra functionalities to django admin but more customization could have done.
 * I would have added documentation for deploying our DB as well.
+* I have added all the basic validations and error handling but more validations can be added.
+* I have used custom API renderer the response can be edited according to the requirements.
+
 
 ## How to set up project.
 * First clone the repository from https://github.com/ygsh0816/fygo
