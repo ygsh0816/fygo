@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,3 +131,11 @@ REST_FRAMEWORK = {
 }
 API_PAGE_SIZE = 10
 HTTP_API_ERROR = 111
+
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
+
+VALIDATE_PASSWORD_MIN_LEN = 8

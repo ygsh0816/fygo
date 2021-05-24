@@ -1,15 +1,24 @@
 # pylint: disable=line-too-long
+# pylint: disable=unused-argument
+from django.forms import model_to_dict
 from rest_framework import serializers
 from .models import Transaction
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from .constant import *
 from .exceptions import CustomException
+from django.conf import settings
+
 User = get_user_model()
 
 
 class AllTransactionSerializer(serializers.ModelSerializer):
+    """
+    All Transactions Serializer
+    """
+
     class Meta:
         model = Transaction
         fields = ['user', 'transaction_id', 'transaction_amount', 'wallet_amount', 'create_date']
@@ -65,6 +74,9 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
             return validated_data
 
     def create(self, validated_data):
+        """
+        Create Data
+        """
         user = validated_data['user']
         if user.transaction_user.select_related().exists():
             validated_data['wallet_amount'] = user.transaction_user.select_related().order_by('-create_date')[
@@ -77,7 +89,7 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
 class GetAllUsersSerializer(serializers.ModelSerializer):
     """
-    serializer for user
+    All User Serializer
     """
 
     def __init__(self, *args, **kwargs):
@@ -96,7 +108,9 @@ class GetAllUsersSerializer(serializers.ModelSerializer):
 
 
 class CreateWithdrawalSerializer(serializers.ModelSerializer):
-    """CreateTransactionSerializer"""
+    """
+    Create Withdrawal Serializer
+    """
 
     def __init__(self, *args, **kwargs):
         super(CreateWithdrawalSerializer, self).__init__(*args, **kwargs)
@@ -139,10 +153,66 @@ class CreateWithdrawalSerializer(serializers.ModelSerializer):
             return validated_data
 
     def create(self, validated_data):
-        validated_data['wallet_amount'] = validated_data['user'].transaction_user.select_related().order_by('-create_date')[
-                                              0].wallet_amount - validated_data['transaction_amount']
+        validated_data['wallet_amount'] = \
+            validated_data['user'].transaction_user.select_related().order_by('-create_date')[
+                0].wallet_amount - validated_data['transaction_amount']
         validated_data['transaction_type'] = 3
         instance = Transaction.objects.create(**validated_data)
         return instance
 
 
+class RegisterUserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration
+    """
+    email = serializers.EmailField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.created = False
+        super(RegisterUserSerializer, self).__init__(*args, **kwargs)
+        context = kwargs.get('context', None)
+        if context:
+            self.request = kwargs['context']['request']
+
+    class Meta(object):
+        """meta information for user registration serializer"""
+        model = get_user_model()
+        fields = ('email', 'password', 'firstname', 'lastname')
+
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
+
+    def validate_email(self, email_value):
+        """meta information for validating email"""
+        try:
+            get_user_model().objects.get(email__iexact=email_value)
+            raise ValidationError(ALREADY_REGISTER_USER)
+        except get_user_model().DoesNotExist:
+            return email_value
+
+    def validate_password(self, password_value):
+        """ validates password """
+        if password_value and (len(password_value) < settings.VALIDATE_PASSWORD_MIN_LEN):
+            raise serializers.ValidationError(PASSWORD_CHARACTER_LENGTH_API)
+        return password_value
+
+    def create(self, validated_data):
+        instance = get_user_model().objects.create(**validated_data)
+        instance.set_password(validated_data['password'])
+        instance.save()
+        self.created = True
+        return instance
+
+    @property
+    def data(self):
+        if self.created:
+            user = model_to_dict(self.instance)
+            response = {
+                'message': USER_REGISTERED_SUCCESSFULLY, 'extras': user}
+        else:
+            response = {'message': USER_NOT_EXIST,
+                        'status': settings.HTTP_API_ERROR}
+        return response

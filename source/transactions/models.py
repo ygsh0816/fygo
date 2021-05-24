@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+# pylint: disable=unused-argument
 import itertools
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
@@ -42,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     lastname = models.CharField('Last Name', max_length=20, db_index=True)
     username = models.SlugField(max_length=254, unique=True, blank=True)
     is_staff = models.BooleanField('Staff member', default=False)
-    is_active = models.BooleanField('Active', default=False)
+    is_active = models.BooleanField('Active', default=True)
     is_superuser = models.BooleanField('Is a Super user', default=False)
     create_date = models.DateTimeField('Joined Time', auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
@@ -99,6 +101,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Transaction(models.Model):
+    """
+    Transaction Model
+    """
     REFUND = 1
     PURCHASE = 2
     WITHDRAWAL = 3

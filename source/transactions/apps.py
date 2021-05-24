@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+# pylint: disable=unused-argument
 from django.apps import AppConfig
 
 

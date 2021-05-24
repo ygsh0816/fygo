@@ -1,4 +1,6 @@
-from .models import Transaction, User
+# pylint: disable=line-too-long
+# pylint: disable=unused-argument
+from .models import Transaction
 from django.contrib import admin, messages as flash_messages
 from django.contrib.admin.views import main
 from django.contrib.admin.utils import unquote
@@ -16,14 +18,18 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.core.exceptions import PermissionDenied
-from .models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+User = get_user_model()
 csrf_protect_m = method_decorator(csrf_protect)
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 
 class TransactionAdmin(admin.ModelAdmin):
+    """
+    Transactions Admin to manage transactions from backend
+    """
     actions = None
     verbose_name = "User Transactions"
 
@@ -41,11 +47,11 @@ class TransactionAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
-    # def has_change_permission(self, request, obj=None):
-    #     return False
+    def has_change_permission(self, request, obj=None):
+        return False
 
     def get_actions(self, request):
         return []

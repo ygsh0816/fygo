@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+# pylint: disable=unused-argument
 from rest_framework.exceptions import APIException
 from django.utils.encoding import force_text
 from django.conf import settings

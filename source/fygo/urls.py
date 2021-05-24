@@ -25,6 +25,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('register/', views.RegisterUserView.as_view(), name="register-user"),
     path('get-all-users/', views.UsersListView.as_view(), name="users-list"),
     path('create-transaction/', views.CreateTransactionView.as_view(), name="create-transaction"),
     path('get-transactions/', views.TransactionsListView.as_view(), name="get-transactions"),
